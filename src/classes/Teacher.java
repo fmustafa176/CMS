@@ -3,19 +3,19 @@ package classes;
 import java.util.ArrayList;
 
 class Teacher extends Person{
-  private String TeacherId;
+  private String teacherId;
   private String specialization;
   private ArrayList<Course> listOfCoursesTaught;
 
   public Teacher(String name, String email, String dateOfbirth, String teacherId, int age, String specialization){
     super(name, email, dateOfbirth);
-    this.TeacherId = teacherId;
-    this.Specialization = specialization;
+    this.teacherId = teacherId;
+    this.specialization = specialization;
     this.listOfCoursesTaught = new ArrayList<>();
   }
 
   public String getTeacherId(){
-    return TeacherId;
+    return teacherId;
   }
 
   public String getSpecialization(){
@@ -23,7 +23,7 @@ class Teacher extends Person{
   }
 
   public void setTeacherId(String teacherId){
-    this.TeacherId = teacherId;
+    this.teacherId = teacherId;
   }
 
   public void setSpecialization(String specialization){
@@ -35,20 +35,23 @@ class Teacher extends Person{
     System.out.println("Teacher " + getName() + " assigned to teach " + course.getTitle() + ".");
   }
 
-  public void displayCourses() {
+  public String getTaughtCourses() {
     if (listOfCoursesTaught.isEmpty()) {
-      System.out.println("No courses assigned yet.");
-      return;
+        return "No courses assigned yet.";
     }
 
-    System.out.println("Courses taught by teacher " + getName() + ":");
+    StringBuilder coursesString = new StringBuilder();
     for (Course course : listOfCoursesTaught) {
-      System.out.println(course.getCourseDetails());
+        coursesString.append(course.getCourseDetails()).append("\n");
     }
+    return coursesString.toString().trim();
   }
 
+
   @Override
-  public String getDetails() {
-    return super.getDetails() + "| Teacher ID: " + teacherId + "| Specialization: " + specialization;
-  } 
+  public String toString() {
+    return String.format("Teacher Details: %s\nTeacher ID: %s\nSpecialization: %s\nCourses Taught:\n%s",
+      super.toString(), teacherId, specialization, getTaughtCourses());
+  }
+
 }

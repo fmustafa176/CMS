@@ -1,26 +1,26 @@
 package classes;
 
-class person{
+class Person{
   protected String name;
   protected String email;
-  protected String dateOfbirth;
+  protected String dateOfBirth;
 
-  public person(String name, String email, String dateOfbirth){
+  public Person(String name, String email, String dateOfBirth){
     this.name = name;
     this.email = email;
-    this.dateOfbirth = dateOfbirth;
+    this.dateOfBirth = dateOfBirth;
   }
 
   public String getName(){
-    return name;
+    return this.name;
   }
 
   public String getEmail(){
-    return email;
+    return this.email;
   }
 
   public String getDateOfBirth(){
-    return date_of_birth;
+    return this.dateOfBirth;
   }
 
   public void setName(String name){
@@ -31,11 +31,12 @@ class person{
     this.email = email;
   }
 
-  public void setDateOfBirth(String dateOfbirth){
-    this.dateOfbirth = dateOfbirth;
+  public void setDateOfBirth(String dateOfBirth){
+    this.dateOfBirth = dateOfBirth;
   } 
 
-  public String toString(){
-    return "Name: " + name + "| Email: " + email + "| Date of Birth: " + date_of_birth;
+  @Override
+  public String toString() {
+    return String.format("Name: %s\nEmail: %s\nDate of Birth: %s", name, email, dateOfBirth);
   }
 }

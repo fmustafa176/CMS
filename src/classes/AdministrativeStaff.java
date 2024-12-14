@@ -1,7 +1,9 @@
 package classes;
 
+import java.util.ArrayList;
+
 class AdministrativeStaff extends Person{
-  private int StaffID;
+  private int staffID;
   private String role;
   private String departmentName;
 
@@ -24,7 +26,7 @@ class AdministrativeStaff extends Person{
     return departmentName;
   }
 
-  public String generateReport(List<Person> people, List<Course> courses) {
+  public String generateReport(ArrayList<Person> people, ArrayList<Course> courses) {
     int studentCount = 0;
     int teacherCount = 0;
 
@@ -47,6 +49,10 @@ class AdministrativeStaff extends Person{
 
   @Override
   public String toString() {
-    return super.getDetails() + "| staffID= " + staffID + "| role= " + role  + "| departmentName= " + departmentName;
+    return String.format(
+        "%s\nStaff ID: %s\n  role: %s\n  departmentName: %s",
+        super.toString(), staffID, role, departmentName
+    );
   }
+
 }
