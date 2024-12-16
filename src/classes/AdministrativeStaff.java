@@ -3,18 +3,18 @@ package classes;
 import java.util.ArrayList;
 
 class AdministrativeStaff extends Person{
-  private int staffID;
+  private String staffID;
   private String role;
   private String departmentName;
 
-  public AdministrativeStaff(String name, String email, String dateOfbirth, int staffID, String role, String departmentName) {
+  public AdministrativeStaff(String name, String email, String dateOfbirth, String staffID, String role, String departmentName) {
     super(name, email, dateOfbirth);
     this.staffID = staffID;
     this.role = role;
     this.departmentName = departmentName;
   }
 
-  public int getStaffID() {
+  public String getStaffID() {
     return staffID;
   }
 

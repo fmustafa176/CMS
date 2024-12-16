@@ -1,6 +1,8 @@
 package classes;
 
-class Person{
+import java.io.Serializable;
+
+class Person implements Serializable{
   protected String name;
   protected String email;
   protected String dateOfBirth;

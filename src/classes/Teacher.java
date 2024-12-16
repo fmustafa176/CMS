@@ -3,27 +3,27 @@ package classes;
 import java.util.ArrayList;
 
 class Teacher extends Person{
-  private String teacherId;
+  private String teacherID;
   private String specialization;
   private ArrayList<Course> listOfCoursesTaught;
 
-  public Teacher(String name, String email, String dateOfbirth, String teacherId, int age, String specialization){
+  public Teacher(String name, String email, String dateOfbirth, String teacherID, int age, String specialization){
     super(name, email, dateOfbirth);
-    this.teacherId = teacherId;
+    this.teacherID = teacherID;
     this.specialization = specialization;
     this.listOfCoursesTaught = new ArrayList<>();
   }
 
-  public String getTeacherId(){
-    return teacherId;
+  public String getteacherID(){
+    return teacherID;
   }
 
   public String getSpecialization(){
     return specialization;
   }
 
-  public void setTeacherId(String teacherId){
-    this.teacherId = teacherId;
+  public void setteacherID(String teacherID){
+    this.teacherID = teacherID;
   }
 
   public void setSpecialization(String specialization){
@@ -51,7 +51,7 @@ class Teacher extends Person{
   @Override
   public String toString() {
     return String.format("Teacher Details: %s\nTeacher ID: %s\nSpecialization: %s\nCourses Taught:\n%s",
-      super.toString(), teacherId, specialization, getTaughtCourses());
+      super.toString(), teacherID, specialization, getTaughtCourses());
   }
 
 }
