@@ -7,6 +7,7 @@ public class Student extends Person{
   private String studentID;
   private String address;
   private ArrayList<Course> enrolledCourses;
+  private static int totalStudents = 0;
 
   public Student(String name, String email, String dateOfBirth, String studentId, String studentAddress) { 
 	super(name, email, dateOfBirth);
@@ -19,6 +20,10 @@ public class Student extends Person{
 	return studentID;
   }
 
+  public String getID() {
+    return studentID;
+  }
+
   public void setStudentID(String studentID) {
 	this.studentID = studentID;
   }
@@ -29,6 +34,22 @@ public class Student extends Person{
 
   public void setAddress(String address) {
 	this.address = address;
+  }
+
+  public static void addStudent() {
+    totalStudents++;
+  }
+
+  public static void removeStudent() {
+    totalStudents--;
+  }
+
+  public static String generateReport() {
+
+  }
+
+  public String exportToFile() {
+    
   }
 
   public void enrollInCourse(Course course) {

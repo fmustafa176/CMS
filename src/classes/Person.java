@@ -2,7 +2,7 @@ package classes;
 
 import java.io.Serializable;
 
-class Person implements Serializable{
+public abstract class Person implements Serializable, GetIdentity, Reportable{
   protected String name;
   protected String email;
   protected String dateOfBirth;
@@ -20,6 +20,8 @@ class Person implements Serializable{
   public String getEmail(){
     return this.email;
   }
+
+  public abstract String getID();
 
   public String getDateOfBirth(){
     return this.dateOfBirth;

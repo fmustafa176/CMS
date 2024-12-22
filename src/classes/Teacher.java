@@ -18,6 +18,10 @@ public class Teacher extends Person{
     return teacherID;
   }
 
+  public String getID() {
+    return teacherID;
+  }
+
   public String getSpecialization(){
     return specialization;
   }

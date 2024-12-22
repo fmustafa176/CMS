@@ -46,7 +46,7 @@ public class HomePage extends JFrame {
         centerPanel.setLayout(new BorderLayout());
 
         // Add an image in the center (optional, remove if not needed)
-        ImageIcon imageIcon = new ImageIcon("C:\\Desktop\\GUI\\image.png"); // Replace with your image path
+        ImageIcon imageIcon = new ImageIcon("image.png"); 
         JLabel imageLabel = new JLabel(imageIcon);
         centerPanel.add(imageLabel, BorderLayout.CENTER);
 

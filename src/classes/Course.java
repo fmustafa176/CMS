@@ -1,6 +1,10 @@
 package classes;
 
-class Course {
+import java.io.Serializable;
+
+import storage.Repository;
+
+public class Course implements Serializable, GetIdentity, Reportable {
   private String courseID;
   private String title;
   private int creditHrs;
@@ -9,9 +13,14 @@ class Course {
     this.courseID = courseID;
     this.title = title;
     this.creditHrs = creditHrs;
+    this.exportToFile();
   }
 
   public String getCourseID() {
+    return courseID;
+  }
+
+  public String getID() {
     return courseID;
   }
 
@@ -21,6 +30,16 @@ class Course {
 
   public int getCreditHrs() {
     return creditHrs;
+  }
+
+  public String generateReport() {
+
+  }
+
+  public String exportToFile() {
+    Repository<Course> placeholder = new Repository<>();
+    String output = placeholder.add(this);
+    return output;
   }
 
   //Accessory method, quite like toString but works properly where we have to return for an array of courses instead of just one

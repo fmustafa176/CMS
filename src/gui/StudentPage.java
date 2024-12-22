@@ -1,16 +1,20 @@
+package gui;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+// import java.awt.event.*;
 import java.util.*;
+import classes.*;
+import storage.University;
 
-class StudentManagement extends JFrame {
+class StudentPage extends JFrame {
     private JTextField studentIDField, studentNameField;
     private JButton enrollButton, displayCoursesButton, backButton;
     private JComboBox<Course> courseComboBox;
     private ArrayList<Course> availableCourses; // List to hold available courses
     private HashMap<String, Student> studentsDatabase; // To manage students by their ID
 
-    public StudentManagement() {
+    public StudentPage() {
         setTitle("Student Management");
         setSize(600, 400);
         setLocationRelativeTo(null);
@@ -26,14 +30,8 @@ class StudentManagement extends JFrame {
         backButton = createButton("Back", "Go back to the main menu");
 
         // Initialize the courses and students database
-        availableCourses = new ArrayList<>();
-        studentsDatabase = new HashMap<>();
-
-        // Example courses
-        availableCourses.add(new Course("MATH101", "Basic Mathematics", "An introduction to algebra and calculus."));
-        availableCourses.add(new Course("CS101", "Introduction to Computer Science", "Basics of programming and algorithms."));
-        availableCourses.add(new Course("ENG101", "English Literature", "An overview of classic literature."));
-
+        availableCourses = new ArrayList<>(University.getCourseRepo().getAll());
+        
         // Populate course combo box
         for (Course course : availableCourses) {
             courseComboBox.addItem(course);
@@ -105,24 +103,17 @@ class StudentManagement extends JFrame {
         String studentID = studentIDField.getText().trim();
         Student student = studentsDatabase.get(studentID);
         if (student != null) {
-            ArrayList<Course> courses = student.getEnrolledCourses();
-            StringBuilder courseList = new StringBuilder();
-            if (courses.isEmpty()) {
-                courseList.append("No courses enrolled yet.");
-            } else {
-                for (Course course : courses) {
-                    courseList.append(course.getCourseDetails()).append("\n");
-                }
-            }
-            JOptionPane.showMessageDialog(this, courseList.toString(), "Enrolled Courses", JOptionPane.INFORMATION_MESSAGE);
+            String courses = student.getEnrolledCourses();
+            
+            JOptionPane.showMessageDialog(this, courses, "Enrolled Courses", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(this, "No student found with the given ID.");
         }
     }
 
     private void goBackToMainMenu() {
-        MainMenu mainMenu = new MainMenu(); // Replace with actual Main Menu class
-        mainMenu.setVisible(true);
+        HomePage homePage = new HomePage(); // Replace with actual Main Menu class
+        homePage.setVisible(true);
         this.dispose(); // Close the current window
     }
 
@@ -133,6 +124,6 @@ class StudentManagement extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new StudentManagement().setVisible(true));
+        SwingUtilities.invokeLater(() -> new StudentPage().setVisible(true));
     }
 }

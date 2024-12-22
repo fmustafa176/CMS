@@ -2,7 +2,7 @@ package classes;
 
 import java.util.ArrayList;
 
-class AdministrativeStaff extends Person{
+public class AdministrativeStaff extends Person{
   private String staffID;
   private String role;
   private String departmentName;
@@ -15,6 +15,10 @@ class AdministrativeStaff extends Person{
   }
 
   public String getStaffID() {
+    return staffID;
+  }
+
+  public String getID() {
     return staffID;
   }
 

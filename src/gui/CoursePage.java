@@ -1,16 +1,19 @@
+package gui;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import classes.*;
 
-class CourseManagement extends JFrame {
+class CoursePage extends JFrame {
     private JTextField courseIDField, courseTitleField, courseCreditsField;
     private JButton addStudentButton, removeStudentButton, calculateAvgButton, backButton;
 
     private ArrayList<Student> enrolledStudents;
     private Teacher assignedTeacher;
 
-    public CourseManagement() {
+    public CoursePage() {
         setTitle("Course Management");
         setSize(600, 400);
         setLocationRelativeTo(null);
@@ -132,13 +135,13 @@ class CourseManagement extends JFrame {
             JOptionPane.YES_NO_OPTION);
 
         if (response == JOptionPane.YES_OPTION) {
-            MainMenu mainMenu = new MainMenu(); // Replace with actual Main Menu class
+            HomePage mainMenu = new HomePage(); // Replace with actual Main Menu class
             mainMenu.setVisible(true);
             this.dispose();
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new CourseManagement().setVisible(true));
+        SwingUtilities.invokeLater(() -> new CoursePage().setVisible(true));
     }
 }

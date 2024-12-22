@@ -1,9 +1,12 @@
+package gui;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import classes.*;
 
-class TeacherManagement extends JFrame {
+class TeacherPage extends JFrame {
     private JTextField teacherIDField, teacherNameField, specializationField;
     private JComboBox<Course> courseComboBox;
     private JButton assignButton, displayCoursesButton, backButton;
@@ -11,7 +14,7 @@ class TeacherManagement extends JFrame {
     private ArrayList<Teacher> teachers; // Internal storage for teachers
     private ArrayList<Course> courses;  // Shared list of courses
 
-    public TeacherManagement(ArrayList<Course> courses) {
+    public TeacherPage(/*ArrayList<Course> courses*/) {
         setTitle("Teacher Management");
         setSize(500, 400);
         setLocationRelativeTo(null);
@@ -134,7 +137,7 @@ class TeacherManagement extends JFrame {
     }
 
     private void goBackToMainMenu() {
-        MainMenu menu = new MainMenu(); // Replace with actual Main Menu class
+        HomePage menu = new HomePage(); // Replace with actual Main Menu class
         menu.setVisible(true);
         this.dispose();
     }
