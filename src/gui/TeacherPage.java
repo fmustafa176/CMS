@@ -2,25 +2,25 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.util.ArrayList;
 import classes.*;
+import storage.University;
 
 class TeacherPage extends JFrame {
     private JTextField teacherIDField, teacherNameField, specializationField;
     private JComboBox<Course> courseComboBox;
-    private JButton assignButton, displayCoursesButton, backButton;
+    private JButton assignButton, displayCoursesButton, backButton, addTeacherButton;
 
-    private ArrayList<Teacher> teachers; // Internal storage for teachers
-    private ArrayList<Course> courses;  // Shared list of courses
+    private ArrayList<Teacher> teachers;
+    private ArrayList<Course> courses;
 
-    public TeacherPage(/*ArrayList<Course> courses*/) {
+    public TeacherPage() {
         setTitle("Teacher Management");
         setSize(500, 400);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        this.courses = courses;
+        this.courses = (ArrayList<Course>) University.getCourseRepo().getAll();
         teachers = new ArrayList<>();
 
         // Initialize components
@@ -32,13 +32,15 @@ class TeacherPage extends JFrame {
         assignButton = createButton("Assign Course", "Assign a course to the teacher");
         displayCoursesButton = createButton("Display Courses", "Show all courses assigned to the teacher");
         backButton = createButton("Back", "Return to the main menu");
+        addTeacherButton = createButton("Add Teacher", "Add a new teacher");
 
         assignButton.addActionListener(e -> assignCourseToTeacher());
         displayCoursesButton.addActionListener(e -> displayCoursesTaught());
         backButton.addActionListener(e -> goBackToMainMenu());
+        addTeacherButton.addActionListener(e -> addNewTeacher());
 
         // Panel for input fields
-        JPanel inputPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+        JPanel inputPanel = new JPanel(new GridLayout(5, 2, 10, 10));
         inputPanel.setBorder(BorderFactory.createTitledBorder("Teacher Details"));
         inputPanel.add(new JLabel("Teacher ID:"));
         inputPanel.add(teacherIDField);
@@ -50,8 +52,9 @@ class TeacherPage extends JFrame {
         inputPanel.add(courseComboBox);
 
         // Panel for buttons
-        JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 10, 10));
+        JPanel buttonPanel = new JPanel(new GridLayout(4, 1, 10, 10));
         buttonPanel.setBorder(BorderFactory.createTitledBorder("Actions"));
+        buttonPanel.add(addTeacherButton);
         buttonPanel.add(assignButton);
         buttonPanel.add(displayCoursesButton);
         buttonPanel.add(backButton);
@@ -93,11 +96,11 @@ class TeacherPage extends JFrame {
 
         Teacher teacher = findTeacherByID(teacherID);
         if (teacher == null) {
-            teacher = new Teacher(teacherID, teacherName, specialization);
+            teacher = new Teacher(teacherID, "N/A", "N/A", teacherName, 0, specialization);
             teachers.add(teacher);
         }
 
-        if (!teacher.getCourses().contains(selectedCourse)) {
+        if (!teacher.getTaughtCourses().contains((CharSequence) selectedCourse)) {
             teacher.assignCourse(selectedCourse);
             JOptionPane.showMessageDialog(this, "Course assigned successfully.");
         } else {
@@ -120,9 +123,7 @@ class TeacherPage extends JFrame {
         }
 
         StringBuilder coursesList = new StringBuilder("Courses taught by " + teacher.getName() + ":\n");
-        for (Course course : teacher.getCourses()) {
-            coursesList.append(course.getCourseTitle()).append("\n");
-        }
+        coursesList.append(teacher.getTaughtCourses());
 
         JOptionPane.showMessageDialog(this, coursesList.toString(), "Courses Taught", JOptionPane.INFORMATION_MESSAGE);
     }
@@ -136,8 +137,27 @@ class TeacherPage extends JFrame {
         return null;
     }
 
+    private void addNewTeacher() {
+        String teacherID = teacherIDField.getText().trim();
+        String teacherName = teacherNameField.getText().trim();
+        String specialization = specializationField.getText().trim();
+
+        if (teacherID.isEmpty() || teacherName.isEmpty() || specialization.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "All fields must be filled to add a new teacher.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (findTeacherByID(teacherID) == null) {
+            Teacher newTeacher = new Teacher(teacherID, "N/A", "N/A", teacherName, 0, specialization);
+            teachers.add(newTeacher);
+            JOptionPane.showMessageDialog(this, "New teacher added successfully.");
+        } else {
+            JOptionPane.showMessageDialog(this, "Teacher with this ID already exists.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void goBackToMainMenu() {
-        HomePage menu = new HomePage(); // Replace with actual Main Menu class
+        HomePage menu = new HomePage();
         menu.setVisible(true);
         this.dispose();
     }

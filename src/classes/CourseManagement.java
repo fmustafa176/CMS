@@ -1,9 +1,8 @@
 package classes;
 
 import java.util.ArrayList;
-import java.util.List;
 
-class CourseManagement extends Course {
+public class CourseManagement extends Course {
   private Teacher assignedTeacher;
   private ArrayList<Student> enrolledStudents = new ArrayList<>();
   private ArrayList<Integer> grades = new ArrayList<>();
@@ -18,14 +17,18 @@ class CourseManagement extends Course {
     System.out.println("Student " + student.getStudentID() + " added to " + super.getTitle() + ".");
   }
 
-  public void removeStudent(Student student) {
-    if (enrolledStudents.remove(student)) {
-      System.out.println("Student " + student.getStudentID() + " removed from " + super.getTitle() + ".");
-    } 
-    else {
-      System.out.println("Student " + student.getStudentID() + " is not enrolled in " + super.getTitle() + ".");
+  public boolean removeStudent(String name) {
+    for (int i = 0; i < enrolledStudents.size(); i++) {
+        Student student = enrolledStudents.get(i);
+        if (student.getName().equalsIgnoreCase(name)) {
+            enrolledStudents.remove(i);
+            grades.remove(i); // Remove the corresponding grade as well
+            return true; // Indicating successful removal
+        }
     }
-  }
+    return false; // Indicating failure to find the student
+}
+
 
   public void addGrade(Student student, int grade) {
     if (enrolledStudents.contains(student)) {
@@ -36,16 +39,31 @@ class CourseManagement extends Course {
     }
   }
 
-  public void calculateAverageGrade() {
+  public String getGrades() {
+    if (enrolledStudents.isEmpty() || grades.isEmpty()) {
+        return "No grades available. No students enrolled or grades not assigned yet.";
+    }
+
+    StringBuilder gradesReport = new StringBuilder("Grades for Enrolled Students:\n");
+    for (int i = 0; i < enrolledStudents.size(); i++) {
+        Student student = enrolledStudents.get(i);
+        int grade = grades.get(i);
+        gradesReport.append(String.format("Student ID: %s, Name: %s, Grade: %d\n",
+                student.getStudentID(), student.getName(), grade));
+    }
+    return gradesReport.toString();
+  }
+
+
+  public double calculateAverageGrade() {
     if (grades.isEmpty()) {
-      System.out.println("No grades available for the course " + super.getTitle() + ".");
-      return;
+        throw new IllegalStateException("No grades available for the course " + super.getTitle() + ".");
     }
     int total = 0;
     for (int grade : grades) {
-      total += grade;
+        total += grade;
     }
-    double average = (double) total / grades.size();
-    System.out.println("Average grade for " + super.getTitle() + ": " + average);
+    return (double) total / grades.size();
   }
+
 }

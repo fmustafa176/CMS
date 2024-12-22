@@ -1,7 +1,7 @@
 package cms;
 
-import classes.*;
-import storage.Repository;
+import gui.*;
+import storage.University;
 
 /**
  *
@@ -9,7 +9,9 @@ import storage.Repository;
  */
 public class CMS {
     public static void main(String[] args) {
-        
+        University.loadData();
+        HomePage menu = new HomePage();
+        menu.setVisible(true);
     }
     
 }

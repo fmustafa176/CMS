@@ -2,143 +2,190 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.util.ArrayList;
 import classes.*;
+import storage.*;
 
-class CoursePage extends JFrame {
-    private JTextField courseIDField, courseTitleField, courseCreditsField;
-    private JButton addStudentButton, removeStudentButton, calculateAvgButton, backButton;
+public class CoursePage extends JFrame {
+    private JTextField courseIDField, courseTitleField, creditHoursField;
+    private JComboBox<Teacher> teacherDropdown;
+    private JButton addCourseButton, calculateAverageButton, addStudentButton, removeStudentButton, backButton;
 
-    private ArrayList<Student> enrolledStudents;
-    private Teacher assignedTeacher;
+    private ArrayList<Course> courses;
+    private ArrayList<Teacher> teachers;
 
     public CoursePage() {
+        this.courses = (ArrayList<Course>) University.getCourseRepo().getAll();
+        this.teachers = (ArrayList<Teacher>) University.getTeacherRepo().getAll();
+        initializeGUI();
+    }
+
+    private void initializeGUI() {
         setTitle("Course Management");
         setSize(600, 400);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLayout(new GridLayout(7, 2, 10, 10));
+
+        // Center the frame on the screen
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        enrolledStudents = new ArrayList<>();
+        // Input fields
+        courseIDField = new JTextField(20);
+        courseTitleField = new JTextField(20);
+        creditHoursField = new JTextField(20);
+        teacherDropdown = new JComboBox<>(teachers.toArray(new Teacher[0]));
 
-        // Initialize components
-        courseIDField = createTextField("Enter Course ID");
-        courseTitleField = createTextField("Enter Course Title");
-        courseCreditsField = createTextField("Enter Course Credits");
+        // Buttons
+        addCourseButton = new JButton("Add Course");
+        calculateAverageButton = new JButton("Calculate Average Grade");
+        addStudentButton = new JButton("Add Student");
+        removeStudentButton = new JButton("Remove Student");
+        backButton = new JButton("Back to Main Menu");
 
-        addStudentButton = createButton("Add Student", "Add a new student to the course");
-        removeStudentButton = createButton("Remove Student", "Remove a student from the course");
-        calculateAvgButton = createButton("Calculate Average Grade", "Calculate the average grade of enrolled students");
-        backButton = createButton("Back", "Return to the main menu");
+        // Add components to frame
+        add(new JLabel("Course ID:"));
+        add(courseIDField);
+        add(new JLabel("Course Title:"));
+        add(courseTitleField);
+        add(new JLabel("Credit Hours:"));
+        add(creditHoursField);
+        add(new JLabel("Assigned Teacher (Optional):"));
+        add(teacherDropdown);
+        add(addCourseButton);
+        add(calculateAverageButton);
+        add(addStudentButton);
+        add(removeStudentButton);
+        add(new JLabel()); // Spacer for alignment
+        add(backButton);
 
-        // Action Listeners
-        addStudentButton.addActionListener(e -> addStudentToCourse());
-        removeStudentButton.addActionListener(e -> removeStudentFromCourse());
-        calculateAvgButton.addActionListener(e -> calculateAverageGrade());
-        backButton.addActionListener(e -> goBackToMainMenu());
-
-        // Panel for course details
-        JPanel coursePanel = new JPanel(new GridLayout(3, 2, 10, 10));
-        coursePanel.setBorder(BorderFactory.createTitledBorder("Course Details"));
-        coursePanel.add(new JLabel("Course ID:"));
-        coursePanel.add(courseIDField);
-        coursePanel.add(new JLabel("Course Title:"));
-        coursePanel.add(courseTitleField);
-        coursePanel.add(new JLabel("Credits:"));
-        coursePanel.add(courseCreditsField);
-
-        // Panel for actions
-        JPanel actionPanel = new JPanel(new GridLayout(3, 1, 10, 10));
-        actionPanel.setBorder(BorderFactory.createTitledBorder("Actions"));
-        actionPanel.add(addStudentButton);
-        actionPanel.add(removeStudentButton);
-        actionPanel.add(calculateAvgButton);
-
-        // Back button panel
-        JPanel backPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        backPanel.add(backButton);
-
-        // Main layout
-        setLayout(new BorderLayout(15, 15));
-        add(coursePanel, BorderLayout.NORTH);
-        add(actionPanel, BorderLayout.CENTER);
-        add(backPanel, BorderLayout.SOUTH);
-
-        // Styling
-        getContentPane().setBackground(new Color(245, 245, 245));
-        pack();
+        // Button actions
+        addCourseButton.addActionListener(e -> addCourse());
+        calculateAverageButton.addActionListener(e -> calculateAverageGrade());
+        addStudentButton.addActionListener(e -> openAddStudentFrame());
+        removeStudentButton.addActionListener(e -> openRemoveStudentFrame());
+        backButton.addActionListener(e -> backToMainMenu());
     }
 
-    private JTextField createTextField(String tooltip) {
-        JTextField field = new JTextField(20);
-        field.setToolTipText(tooltip);
-        field.setFont(new Font("Arial", Font.PLAIN, 14));
-        return field;
-    }
+    private void addCourse() {
+        String courseID = courseIDField.getText().trim();
+        String title = courseTitleField.getText().trim();
+        String creditHoursText = creditHoursField.getText().trim();
+        Teacher assignedTeacher = (Teacher) teacherDropdown.getSelectedItem();
 
-    private JButton createButton(String text, String tooltip) {
-        JButton button = new JButton(text);
-        button.setToolTipText(tooltip);
-        button.setFont(new Font("Arial", Font.BOLD, 14));
-        return button;
-    }
-
-    private void addStudentToCourse() {
-        String studentName = JOptionPane.showInputDialog(this, "Enter Student Name:");
-        String studentID = JOptionPane.showInputDialog(this, "Enter Student ID:");
-
-        if (studentName == null || studentName.isEmpty() || studentID == null || studentID.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Student Name and ID must not be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+        if (courseID.isEmpty() || title.isEmpty() || creditHoursText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill in all required fields.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        Student newStudent = new Student(studentName, "Email Placeholder", "DOB Placeholder", studentID, "Address Placeholder");
-        enrolledStudents.add(newStudent);
-        JOptionPane.showMessageDialog(this, "Student " + studentName + " added to the course.");
-    }
-
-    private void removeStudentFromCourse() {
-        String studentID = JOptionPane.showInputDialog(this, "Enter Student ID to Remove:");
-
-        if (studentID == null || studentID.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Student ID must not be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+        int creditHours;
+        try {
+            creditHours = Integer.parseInt(creditHoursText);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Credit hours must be a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        boolean removed = enrolledStudents.removeIf(student -> student.getStudentID().equals(studentID));
-        if (removed) {
-            JOptionPane.showMessageDialog(this, "Student with ID " + studentID + " removed from the course.");
-        } else {
-            JOptionPane.showMessageDialog(this, "No student found with ID " + studentID + ".", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        // Create Course and add to list
+        Course course = new Course(courseID, title, creditHours);
+        courses.add(course);
+        JOptionPane.showMessageDialog(this, "Course added successfully!");
     }
 
     private void calculateAverageGrade() {
-        if (enrolledStudents.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No students enrolled in the course.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+        CourseManagement selectedCourse = getSelectedCourseManagement();
+        if (selectedCourse != null) {
+            try {
+                double average = selectedCourse.calculateAverageGrade();
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Average Grade: " + average,
+                    "Average Grade",
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+            } catch (IllegalStateException e) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    e.getMessage(),
+                    "No Grades Available",
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+        } else {
+            JOptionPane.showMessageDialog(
+                this,
+                "Please select a course.",
+                "No Course Selected",
+                JOptionPane.WARNING_MESSAGE
+            );
         }
-
-        double totalGrades = 0.0;
-        for (Student student : enrolledStudents) {
-            totalGrades += Math.random() * 100; // Placeholder for actual grade calculation
-        }
-
-        double averageGrade = totalGrades / enrolledStudents.size();
-        JOptionPane.showMessageDialog(this, String.format("Average grade for the course: %.2f", averageGrade), "Average Grade", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void goBackToMainMenu() {
-        int response = JOptionPane.showConfirmDialog(this, 
-            "Are you sure you want to return to the main menu?", 
-            "Confirm Exit", 
-            JOptionPane.YES_NO_OPTION);
+    private void openAddStudentFrame() {
+        JFrame addStudentFrame = new JFrame("Add Student");
+        addStudentFrame.setSize(400, 200);
+        addStudentFrame.setLayout(new GridLayout(3, 2, 10, 10));
 
-        if (response == JOptionPane.YES_OPTION) {
-            HomePage mainMenu = new HomePage(); // Replace with actual Main Menu class
-            mainMenu.setVisible(true);
-            this.dispose();
-        }
+        JTextField studentIDField = new JTextField(20);
+        JTextField studentNameField = new JTextField(20);
+        JButton addButton = new JButton("Add");
+
+        addStudentFrame.add(new JLabel("Student ID:"));
+        addStudentFrame.add(studentIDField);
+        addStudentFrame.add(new JLabel("Student Name:"));
+        addStudentFrame.add(studentNameField);
+        addStudentFrame.add(addButton);
+
+        addButton.addActionListener(e -> {
+            String studentID = studentIDField.getText().trim();
+            String name = studentNameField.getText().trim();
+
+            if (studentID.isEmpty() || name.isEmpty()) {
+                JOptionPane.showMessageDialog(addStudentFrame, "Both fields are required.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Student newStudent = new Student(name, "Email Placeholder", "DOB Placeholder", studentID, "Address Placeholder");
+            getSelectedCourseManagement().addStudent(newStudent);
+            JOptionPane.showMessageDialog(addStudentFrame, "Student added successfully.");
+        });
+
+        addStudentFrame.setVisible(true);
+    }
+
+    private void openRemoveStudentFrame() {
+        JFrame removeStudentFrame = new JFrame("Remove Student");
+        removeStudentFrame.setSize(400, 150);
+        removeStudentFrame.setLayout(new GridLayout(2, 2, 10, 10));
+
+        JTextField studentIDField = new JTextField(20);
+        JButton removeButton = new JButton("Remove");
+
+        removeStudentFrame.add(new JLabel("Student ID:"));
+        removeStudentFrame.add(studentIDField);
+        removeStudentFrame.add(removeButton);
+
+        removeButton.addActionListener(e -> {
+            String studentID = studentIDField.getText().trim();
+            CourseManagement course = getSelectedCourseManagement();
+            if (course != null && course.removeStudent(studentID)) {
+                JOptionPane.showMessageDialog(removeStudentFrame, "Student removed successfully.");
+            } else {
+                JOptionPane.showMessageDialog(removeStudentFrame, "Student not found.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        removeStudentFrame.setVisible(true);
+    }
+
+    private void backToMainMenu() {
+        // Close this window and return to the main menu
+        dispose();
+        new HomePage().setVisible(true); // Replace `HomePage` with the actual main menu class
+    }
+
+    private CourseManagement getSelectedCourseManagement() {
+        // Placeholder: Implement logic to get the selected CourseManagement object
+        return null;
     }
 
     public static void main(String[] args) {

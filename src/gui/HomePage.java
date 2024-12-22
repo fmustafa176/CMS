@@ -3,132 +3,109 @@ package gui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.border.Border;
+import java.util.ArrayList;
+
+import classes.*;
 
 public class HomePage extends JFrame {
 
     public HomePage() {
         setTitle("School Management System");
-        setSize(1200, 650);  // Larger window size for a more spacious layout
+        setSize(1200, 650); // Larger window for a spacious layout
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);  // Center the window on the screen
-        setResizable(true);  // Allow resizing
-
-        // Set Layout for the frame
+        setLocationRelativeTo(null); // Center the window
+        setResizable(true); // Allow resizing
         setLayout(new BorderLayout());
 
-        // Create a Panel for the buttons on the left and right
+        // Left button panel
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(5, 1, 10, 10)); // Vertical button layout with spacing
+        buttonPanel.setLayout(new GridLayout(5, 1, 15, 15));
+        buttonPanel.setPreferredSize(new Dimension(250, getHeight()));
+        buttonPanel.setBackground(new Color(245, 245, 245));
 
-        // Set the preferred width of the button panel
-        buttonPanel.setPreferredSize(new Dimension(300, getHeight()));  // Increase width to 300px
+        // Central display panel
+        JPanel centerPanel = new JPanel();
+        centerPanel.setBackground(Color.WHITE);
+        centerPanel.setLayout(new BorderLayout());
+        JLabel welcomeLabel = new JLabel("Welcome to School Management System", JLabel.CENTER);
+        welcomeLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        centerPanel.add(welcomeLabel, BorderLayout.CENTER);
 
-        // Create buttons for each page
-        JButton studentButton = createButton("Student Management", "student_icon.png");
-        JButton teacherButton = createButton("Teacher Management", "teacher_icon.png");
-        JButton courseButton = createButton("Course Management", "course_icon.png");
-        JButton reportButton = createButton("Generate Report", "report_icon.png");
-        JButton exitButton = createButton("Exit", "exit_icon.png");
+        // Add left panel and center panel to the frame
+        add(buttonPanel, BorderLayout.WEST);
+        add(centerPanel, BorderLayout.CENTER);
 
-        // Add buttons to the button panel
+        // Create and add buttons with hover effects
+        JButton studentButton = createButton("Manage Students", "icons/student.png");
+        JButton teacherButton = createButton("Manage Teachers", "icons/teacher.png");
+        JButton courseButton = createButton("Manage Courses", "icons/course.png");
+        JButton reportButton = createButton("View Reports", "icons/report.png");
+        JButton exitButton = createButton("Exit", "icons/exit.png");
+
         buttonPanel.add(studentButton);
         buttonPanel.add(teacherButton);
         buttonPanel.add(courseButton);
         buttonPanel.add(reportButton);
         buttonPanel.add(exitButton);
 
-        // Set button panel to the left side of the frame
-        add(buttonPanel, BorderLayout.WEST);
-
-        // Create a Panel for the center content
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BorderLayout());
-
-        // Add an image in the center (optional, remove if not needed)
-        ImageIcon imageIcon = new ImageIcon("image.png"); 
-        JLabel imageLabel = new JLabel(imageIcon);
-        centerPanel.add(imageLabel, BorderLayout.CENTER);
-
-        // Set background color to white for the center panel
-        centerPanel.setBackground(Color.WHITE); // White background
-        add(centerPanel, BorderLayout.CENTER);
-
-        // Action listeners for the buttons
-        studentButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new StudentPage().setVisible(true);
-                dispose(); // Close current window
-            }
-        });
-        
-        teacherButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new TeacherPage().setVisible(true);
-                dispose();
-            }
+        // Button actions
+        studentButton.addActionListener(e -> {
+            new StudentPage().setVisible(true);
+            dispose();
         });
 
-        courseButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new CoursePage().setVisible(true);
-                dispose();
-            }
+        teacherButton.addActionListener(e -> {
+            new TeacherPage().setVisible(true);
+            dispose();
         });
 
-        reportButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new ReportPage().setVisible(true);
-                dispose();
-            }
+        courseButton.addActionListener(e -> {
+            new CoursePage().setVisible(true);
+            dispose();
         });
 
-        exitButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0); // Close the application
-            }
+        reportButton.addActionListener(e -> {
+            new ReportPage().setVisible(true);
+            dispose();
         });
+
+        exitButton.addActionListener(e -> System.exit(0));
     }
 
-    // Helper method to create styled buttons with icons and hover effects
+    // Helper method to create buttons with consistent styling
     private JButton createButton(String text, String iconPath) {
-        JButton button = new JButton(text);
-        button.setFont(new Font("Segoe UI", Font.BOLD, 16)); // Modern font
-        button.setForeground(Color.WHITE); // Text color
-        button.setBackground(new Color(70, 130, 180)); // Button color
-        button.setFocusPainted(false); // Remove focus border
-        button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2)); // Add border
-        button.setPreferredSize(new Dimension(250, 60)); // Button size
+        JButton button = new JButton(text, new ImageIcon(iconPath));
+        button.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        button.setForeground(Color.WHITE);
+        button.setBackground(new Color(70, 130, 180));
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2));
+        button.setPreferredSize(new Dimension(200, 50));
 
-        // Add Icon to button
-        button.setIcon(new ImageIcon(iconPath)); // Set the icon for the button
-        button.setHorizontalTextPosition(SwingConstants.CENTER);
-        button.setVerticalTextPosition(SwingConstants.BOTTOM);
-
-        // Hover effect on button
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(100, 150, 220)); // Change color on hover
+        // Hover effect
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(new Color(100, 150, 220));
             }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(70, 130, 180)); // Revert back to original color
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(new Color(70, 130, 180));
             }
         });
-
-        // Rounded borders
-        Border border = BorderFactory.createLineBorder(new Color(255, 255, 255), 2);
-        button.setBorder(border);
-
-        // Add shadow effect on the button
-        button.setOpaque(true);
         return button;
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new HomePage().setVisible(true);
-            }
-        });
+        ArrayList<Course> courses = new ArrayList<>();
+        courses.add(new Course("CS101", "Intro to Computer Science", 3));
+        courses.add(new Course("MATH201", "Calculus II", 4));
+
+        ArrayList<Teacher> teachers = new ArrayList<>();
+        teachers.add(new Teacher("Dr. Alice Smith", "alice.smith@example.com", "1975-08-15", "T001", 48, "Computer Science"));
+        teachers.add(new Teacher("Dr. Robert Johnson", "robert.johnson@example.com", "1980-04-22", "T002", 43, "Mathematics"));
+
+        SwingUtilities.invokeLater(() -> new HomePage().setVisible(true));
     }
 }
