@@ -8,6 +8,4 @@ class generic<T>{
   public generic(){
     list = new ArrayList<>();
   }
-
-  
 }

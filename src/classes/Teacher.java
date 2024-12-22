@@ -2,7 +2,7 @@ package classes;
 
 import java.util.ArrayList;
 
-class Teacher extends Person{
+public class Teacher extends Person{
   private String teacherID;
   private String specialization;
   private ArrayList<Course> listOfCoursesTaught;
