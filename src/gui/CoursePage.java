@@ -9,7 +9,7 @@ import storage.*;
 public class CoursePage extends JFrame {
     private JTextField courseIDField, courseTitleField, creditHoursField;
     private JComboBox<Teacher> teacherDropdown;
-    private JButton addCourseButton, calculateAverageButton, addStudentButton, removeStudentButton, backButton;
+    private JButton addCourseButton, calculateAverageButton, addStudentButton, removeStudentButton, backButton, searchByCreditsButton;
 
     private ArrayList<Course> courses;
     private ArrayList<Teacher> teachers;
@@ -24,25 +24,22 @@ public class CoursePage extends JFrame {
         setTitle("Course Management");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new GridLayout(7, 2, 10, 10));
+        setLayout(new GridLayout(8, 2, 10, 10));
 
-        // Center the frame on the screen
         setLocationRelativeTo(null);
 
-        // Input fields
         courseIDField = new JTextField(20);
         courseTitleField = new JTextField(20);
         creditHoursField = new JTextField(20);
         teacherDropdown = new JComboBox<>(teachers.toArray(new Teacher[0]));
 
-        // Buttons
         addCourseButton = new JButton("Add Course");
         calculateAverageButton = new JButton("Calculate Average Grade");
         addStudentButton = new JButton("Add Student");
         removeStudentButton = new JButton("Remove Student");
         backButton = new JButton("Back to Main Menu");
+        searchByCreditsButton = new JButton("Search by Minimum Credit Hours");
 
-        // Add components to frame
         add(new JLabel("Course ID:"));
         add(courseIDField);
         add(new JLabel("Course Title:"));
@@ -55,15 +52,15 @@ public class CoursePage extends JFrame {
         add(calculateAverageButton);
         add(addStudentButton);
         add(removeStudentButton);
-        add(new JLabel()); // Spacer for alignment
+        add(searchByCreditsButton); // Add the new search button
         add(backButton);
 
-        // Button actions
         addCourseButton.addActionListener(e -> addCourse());
         calculateAverageButton.addActionListener(e -> calculateAverageGrade());
         addStudentButton.addActionListener(e -> openAddStudentFrame());
         removeStudentButton.addActionListener(e -> openRemoveStudentFrame());
         backButton.addActionListener(e -> backToMainMenu());
+        searchByCreditsButton.addActionListener(e -> searchByMinimumCredits());
     }
 
     private void addCourse() {
@@ -85,7 +82,6 @@ public class CoursePage extends JFrame {
             return;
         }
 
-        // Create Course and add to list
         Course course = new Course(courseID, title, creditHours);
         courses.add(course);
         JOptionPane.showMessageDialog(this, "Course added successfully!");
@@ -178,9 +174,21 @@ public class CoursePage extends JFrame {
     }
 
     private void backToMainMenu() {
-        // Close this window and return to the main menu
         dispose();
         new HomePage().setVisible(true); // Replace `HomePage` with the actual main menu class
+    }
+
+    private void searchByMinimumCredits() {
+        String input = JOptionPane.showInputDialog(this, "Enter Minimum Credit Hours:");
+        if (input != null && !input.trim().isEmpty()) {
+            try {
+                int minCredits = Integer.parseInt(input.trim());
+                String result = University.filterCoursesByCredits(minCredits);
+                JOptionPane.showMessageDialog(this, result, "Filtered Courses", JOptionPane.INFORMATION_MESSAGE);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     private CourseManagement getSelectedCourseManagement() {

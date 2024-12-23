@@ -16,7 +16,7 @@ public class Teacher extends Person {
         this.specialization = specialization;
         this.listOfCoursesTaught = new ArrayList<>();
         addTeacher();
-        University.getTeacherRepo().getAll();
+        University.getTeacherRepo().add(this);
     }
 
     public static void addTeacher() {
@@ -70,7 +70,7 @@ public class Teacher extends Person {
 
     @Override
     public String toString() {
-        return String.format("Teacher Details: %s\nTeacher ID: %s\nSpecialization: %s\nCourses Taught:\n%s",
+        return String.format("Teacher Details: %s, Teacher ID: %s, Specialization: %s ,Courses Taught: %s",
             super.toString(), teacherID, specialization, getTaughtCourses());
     }
 

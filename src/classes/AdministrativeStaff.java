@@ -58,7 +58,6 @@ public class AdministrativeStaff extends Person {
 
     @Override
     public String exportToFile() {
-        // Stub for export logic, returning a placeholder message
         return String.format("Administrative Staff %s (%s) exported to file successfully.", staffID, getName());
     }
 

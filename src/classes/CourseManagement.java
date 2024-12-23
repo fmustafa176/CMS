@@ -22,11 +22,11 @@ public class CourseManagement extends Course {
         Student student = enrolledStudents.get(i);
         if (student.getName().equalsIgnoreCase(name)) {
             enrolledStudents.remove(i);
-            grades.remove(i); // Remove the corresponding grade as well
-            return true; // Indicating successful removal
+            grades.remove(i);
+            return true;
         }
     }
-    return false; // Indicating failure to find the student
+    return false;
 }
 
 

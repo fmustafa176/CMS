@@ -63,15 +63,18 @@ public class University {
         if (matchingStudents.isEmpty()) {
             return "No matching students found.";
         }
-
+    
         StringBuilder result = new StringBuilder("Found students:\n");
         for (Student student : matchingStudents) {
-            result.append(student.getName()).append("\n");
+            result.append(student.getName())
+                  .append(", ")
+                  .append(student.getID())
+                  .append("\n");
         }
         return result.toString().trim();
     }
+    
 
-    // Method to filter courses by minimum credits
     public static String filterCoursesByCredits(int minCredits) {
         List<Course> filteredCourses = new ArrayList<>();
         for (Course course : courseRepo.getAll()) {

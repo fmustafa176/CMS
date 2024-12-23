@@ -27,7 +27,7 @@ public class HomePage extends JFrame {
         JPanel centerPanel = new JPanel();
         centerPanel.setBackground(Color.WHITE);
         centerPanel.setLayout(new BorderLayout());
-        JLabel welcomeLabel = new JLabel("Welcome to School Management System", JLabel.CENTER);
+        JLabel welcomeLabel = new JLabel(new ImageIcon("image.png"), JLabel.CENTER);
         welcomeLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         centerPanel.add(welcomeLabel, BorderLayout.CENTER);
 
@@ -36,11 +36,11 @@ public class HomePage extends JFrame {
         add(centerPanel, BorderLayout.CENTER);
 
         // Create and add buttons with hover effects
-        JButton studentButton = createButton("Manage Students", "icons/student.png");
-        JButton teacherButton = createButton("Manage Teachers", "icons/teacher.png");
-        JButton courseButton = createButton("Manage Courses", "icons/course.png");
-        JButton reportButton = createButton("View Reports", "icons/report.png");
-        JButton exitButton = createButton("Exit", "icons/exit.png");
+        JButton studentButton = createButton("Manage Students", null);
+        JButton teacherButton = createButton("Manage Teachers", null);
+        JButton courseButton = createButton("Manage Courses", null);
+        JButton reportButton = createButton("View Reports", null);
+        JButton exitButton = createButton("Exit", null);
 
         buttonPanel.add(studentButton);
         buttonPanel.add(teacherButton);

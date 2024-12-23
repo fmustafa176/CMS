@@ -2,7 +2,6 @@ package classes;
 
 import java.io.Serializable;
 
-import storage.Repository;
 import storage.University;
 
 public class Course implements Serializable, GetIdentity, Reportable {
@@ -16,7 +15,7 @@ public class Course implements Serializable, GetIdentity, Reportable {
         this.title = title;
         this.creditHrs = creditHrs;
         addCourse();
-        University.getCourseRepo().getAll();
+        University.getCourseRepo().add(this);
     }
 
     public static void addCourse() {
@@ -56,17 +55,15 @@ public class Course implements Serializable, GetIdentity, Reportable {
 
     @Override
     public String exportToFile() {
-        // Stub for file export logic, returning a meaningful message
         return String.format("Course %s (%s) exported to file successfully.", courseID, title);
     }
 
-    // Accessory method for formatting course details for display
     public String getCourseDetails() {
         return String.format("%s: %s (%d credits)", courseID, title, creditHrs);
     }
 
     @Override
     public String toString() {
-        return String.format("Course ID: %s\nTitle: %s\nCredits: %d", courseID, title, creditHrs);
+        return String.format("Course ID: %s, Title: %s, Credits: %d", courseID, title, creditHrs);
     }
 }

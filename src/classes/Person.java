@@ -41,6 +41,6 @@ public abstract class Person implements Serializable, GetIdentity, Reportable{
 
   @Override
   public String toString() {
-    return String.format("Name: %s\nEmail: %s\nDate of Birth: %s", name, email, dateOfBirth);
+    return String.format("Name: %s, Email: %s, Date of Birth: %s", name, email, dateOfBirth);
   }
 }

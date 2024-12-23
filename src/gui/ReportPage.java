@@ -1,10 +1,7 @@
 package gui;
 
 import javax.swing.*;
-
 import java.awt.*;
-// import java.awt.event.*;
-// import java.io.*;
 import java.util.*;
 import java.util.List;
 
@@ -12,7 +9,7 @@ import classes.*;
 import storage.*;
 
 class ReportPage extends JFrame {
-    private JButton studentReportButton, teacherReportButton, systemStatsButton, backButton;
+    private JButton studentReportButton, teacherReportButton, systemStatsButton, backButton, allReportsButton;
     private JTextArea reportArea;
     private JScrollPane scrollPane;
 
@@ -27,6 +24,7 @@ class ReportPage extends JFrame {
         teacherReportButton = createButton("Generate Teacher Workload Report", "Generate a report of teacher workloads.");
         systemStatsButton = createButton("Generate System Statistics", "Generate overall system statistics.");
         backButton = createButton("Back", "Go back to the main menu.");
+        allReportsButton = createButton("Generate All Reports", "Display all students, courses, and teachers.");
 
         reportArea = new JTextArea();
         reportArea.setEditable(false);
@@ -37,12 +35,14 @@ class ReportPage extends JFrame {
         teacherReportButton.addActionListener(e -> generateTeacherWorkloadReport());
         systemStatsButton.addActionListener(e -> generateSystemStatsReport());
         backButton.addActionListener(e -> goBackToMainMenu());
+        allReportsButton.addActionListener(e -> generateAllReports());
 
-        JPanel panel = new JPanel(new GridLayout(5, 1, 10, 10));
+        JPanel panel = new JPanel(new GridLayout(6, 1, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
         panel.add(studentReportButton);
         panel.add(teacherReportButton);
         panel.add(systemStatsButton);
+        panel.add(allReportsButton); // Add the new all reports button
         panel.add(backButton);
 
         setLayout(new BorderLayout());
@@ -93,6 +93,48 @@ class ReportPage extends JFrame {
 
         reportArea.setText(report.length() > 0 ? report.toString() : "No system data available.");
     }
+
+    private void generateAllReports() {
+        StringBuilder report = new StringBuilder();
+    
+        ArrayList<Student> students = new ArrayList<>(University.getStudentRepo().getAll()); 
+        ArrayList<Course> courses = new ArrayList<>(University.getCourseRepo().getAll());
+        List<Teacher> teachers = new ArrayList<>(University.getTeacherRepo().getAll()); 
+    
+        // Append students
+        report.append("Students:\n");
+        for (Student student : students) {
+            report.append(student.toString()).append("/n");
+        }
+    
+        // Remove trailing comma and space
+        if (report.length() > 0) {
+            report.delete(report.length() - 2, report.length());
+        }
+    
+        report.append("\n\nCourses:\n");
+        for (Course course : courses) {
+            report.append(course.getCourseDetails()).append("/n");
+        }
+    
+        // Remove trailing comma and space
+        if (report.length() > 0) {
+            report.delete(report.length() - 2, report.length());
+        }
+    
+        report.append("\n\nTeachers:\n");
+        for (Teacher teacher : teachers) {
+            report.append(teacher.toString()).append("\n");
+        }
+    
+        // Remove trailing comma and space
+        if (report.length() > 0) {
+            report.delete(report.length() - 2, report.length());
+        }
+    
+        reportArea.setText(report.length() > 0 ? report.toString() : "No data available.");
+    }
+    
 
     private void goBackToMainMenu() {
         HomePage menu = new HomePage();
